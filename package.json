@@ -7,6 +7,7 @@
     "@types/node": "10.12.18",
     "@types/react": "16.7.18",
     "@types/react-dom": "16.0.11",
+    "env-cmd": "^8.0.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.2",
@@ -15,6 +16,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "serve": "serve -s build",
+    "build:dev": "env-cmd .env.dev npm-run-all build serve",
+    "build:prod": "env-cmd .env.prod npm-run-all build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -26,5 +30,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
 }
