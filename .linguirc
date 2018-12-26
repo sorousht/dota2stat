@@ -1,0 +1,6 @@
+{
+   "localeDir": "<rootDir>/src/config/i18n",
+   "srcPathDirs": ["<rootDir>/src/"],
+   "format": "minimal",
+   "compileNamespace": "es"
+}
