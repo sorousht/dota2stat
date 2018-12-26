@@ -6,6 +6,7 @@ import { ErrorReason } from '../../api/ErrorReason';
 import { I18n, Trans } from '@lingui/react';
 import { t } from '@lingui/macro';
 import { i18n } from '../../services/i18n';
+import { produce } from 'immer';
 
 type LoginProps = {
 
@@ -34,36 +35,30 @@ export class Login extends React.Component<LoginProps, LoginState> {
     this.state = {
       loading: false,
       submitted: false,
-      error: {
-
-      }
+      error: { }
     };
   }
 
   private readonly _validate = (steamId?: string): boolean => {
     if (!steamId) {
-      this.setState({
-        error: {
-          ...this.state.error,
-          steamId: VALIDATION_REQUIRED,
-        }
-      });
+      this.setState(produce(draft => {
+        draft.error.steamId = VALIDATION_REQUIRED;
+      }));
 
       return false;
     }
 
     if (!STEAM_ID_REGEX.test(steamId)) {
-      this.setState({
-        error: {
-          ...this.state.error,
-          steamId: VALIDATION_INVALID,
-        },
-      });
+      this.setState(produce(draft => {
+        draft.error.steamId = VALIDATION_INVALID;
+      }));
 
       return false;
     }
 
-    this.setState({ error: {} });
+    this.setState(produce(draft => {
+      draft.error = {};
+    }));
 
     return true;
   }
@@ -71,16 +66,18 @@ export class Login extends React.Component<LoginProps, LoginState> {
   private readonly _handleLoginClick = async () => {
     const { steamId } = this.state;
 
-    this.setState({ submitted: true });
+    this.setState(produce(draft => {
+      draft.submitted = true;
+    }));
 
     if (!this._validate(steamId)) {
       return;
     }
 
 
-    this.setState({
-      loading: true,
-    });
+    this.setState(produce(draft => {
+      draft.loading = true;
+    }));
 
     const {
       data,
@@ -106,17 +103,20 @@ export class Login extends React.Component<LoginProps, LoginState> {
       });
     }
 
-    this.setState({
-      loading: false,
-    });
+    this.setState(produce(draft => {
+      draft.loading = false;
+    }));
   }
 
   private readonly _handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
     if (this.state.submitted) {
-      this._validate(event.target.value);
+      this._validate(value);
     }
 
-    this.setState({ steamId: event.target.value });
+    this.setState(produce(draft => {
+      draft.steamId = value;
+    }));
   }
 
   render() {
