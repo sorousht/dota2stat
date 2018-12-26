@@ -3,6 +3,9 @@ import { Button, InputGroup, FormGroup } from '@blueprintjs/core/';
 import { PlayerApi } from '../../api/Player';
 import { AppToaster } from '../../components/AppToaster';
 import { ErrorReason } from '../../api/ErrorReason';
+import { I18n, Trans } from '@lingui/react';
+import { t } from '@lingui/macro';
+import { i18n } from '../../services/i18n';
 
 type LoginProps = {
 
@@ -18,6 +21,11 @@ type LoginState = {
 };
 
 const STEAM_ID_REGEX = new RegExp('^\\d{9}$');
+const VALIDATION_REQUIRED = i18n._(t('login.msg.required')`Please enter your Steam ID.`);
+const VALIDATION_INVALID = i18n._(t('login.msg.invalid')`The Steam ID must be a 9 digit number.`);
+const MESSAGE_NOT_FOUND = i18n._(t('login.msg.404')`Could not find your Steam profile.`);
+const MESSAGE_ERROR = i18n._(t('login.msg.500')`An error has occured while finding your account.`);
+const createWelcomeMessage = (name: string) => i18n._(t('login.msg.welcome')`Welcome ${name}`);
 
 export class Login extends React.Component<LoginProps, LoginState> {
   constructor(props: LoginProps) {
@@ -37,18 +45,18 @@ export class Login extends React.Component<LoginProps, LoginState> {
       this.setState({
         error: {
           ...this.state.error,
-          steamId: 'Please enter your Steam ID.',
+          steamId: VALIDATION_REQUIRED,
         }
       });
-      
+
       return false;
     }
-    
+
     if (!STEAM_ID_REGEX.test(steamId)) {
       this.setState({
         error: {
           ...this.state.error,
-          steamId: 'The Steam ID must be a 9 digit number.',
+          steamId: VALIDATION_INVALID,
         },
       });
 
@@ -64,11 +72,11 @@ export class Login extends React.Component<LoginProps, LoginState> {
     const { steamId } = this.state;
 
     this.setState({ submitted: true });
-    
+
     if (!this._validate(steamId)) {
       return;
     }
-    
+
 
     this.setState({
       loading: true,
@@ -82,8 +90,8 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     if (!success) {
       const message = error === ErrorReason.NOT_FOUND ?
-        'Could not find your Steam profile.' :
-        'An error has occured while finding your account.';
+        MESSAGE_NOT_FOUND :
+        MESSAGE_ERROR;
 
       AppToaster.show({
         message,
@@ -93,7 +101,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
 
     if (data) {
       AppToaster.show({
-        message: `Welcome ${data.profile.personaname}!`,
+        message: createWelcomeMessage(data.profile.personaname),
         intent: "success",
       });
     }
@@ -117,22 +125,27 @@ export class Login extends React.Component<LoginProps, LoginState> {
       loading,
     } = this.state;
     return (
-      <div>
-        <FormGroup
-          label="Steam ID"
-          labelFor="idInput"
-          helperText={error.steamId}
-        >
-          <InputGroup
-            required
-            id="idInput"
-            placeholder="Your Steam32 ID"
-            intent={error.steamId ? 'warning' : 'none'}
-            onChange={this._handleIdChange}
-          />
-        </FormGroup>
-        <Button onClick={this._handleLoginClick} loading={loading}>Login</Button>
-      </div>
+      <I18n>
+        {({ i18n }) => (
+          <div>
+            <h1><Trans id="login.steamIdLabel"></Trans></h1>
+            <FormGroup
+              label={i18n._(t('login.steamIdLabel')`Steam ID`)}
+              labelFor="steamIdInput"
+              helperText={error.steamId}
+            >
+              <InputGroup
+                required
+                id="steamIdInput"
+                placeholder={i18n._(t('login.steamIdPlaceholder')`Your Steam32 ID`)}
+                intent={error.steamId ? 'warning' : 'none'}
+                onChange={this._handleIdChange}
+              />
+            </FormGroup>
+            <Button onClick={this._handleLoginClick} loading={loading}>Login</Button>
+          </div>
+        )}
+      </I18n>
     );
   }
 }
