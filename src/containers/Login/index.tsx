@@ -1,47 +1,73 @@
-import React from 'react';
-import { Button, InputGroup, FormGroup } from '@blueprintjs/core/';
-import { PlayerApi } from '../../api/Player';
-import { AppToaster } from '../../components/AppToaster';
-import { ErrorReason } from '../../api/ErrorReason';
-import { I18n, Trans } from '@lingui/react';
-import { t } from '@lingui/macro';
-import { i18n } from '../../services/i18n';
-import { produce } from 'immer';
+// tslint:disable-next-line:no-submodule-imports
+import { Button, FormGroup, InputGroup } from "@blueprintjs/core/";
+// tslint:disable-next-line:no-implicit-dependencies
+import { t } from "@lingui/macro";
+import { produce } from "immer";
+import React from "react";
+import { ErrorReason } from "../../api/ErrorReason";
+import { PlayerApi } from "../../api/Player";
+import { AppToaster } from "../../components/AppToaster";
+import { i18n } from "../../services/i18n";
 
-type LoginProps = {
-
-};
-
-type LoginState = {
+interface ILoginState {
   steamId?: string;
   loading: boolean;
   submitted: boolean;
   error: {
     steamId?: string,
-  }
-};
+  };
+}
 
-const STEAM_ID_REGEX = new RegExp('^\\d{9}$');
-const VALIDATION_REQUIRED = i18n._(t('login.msg.required')`Please enter your Steam ID.`);
-const VALIDATION_INVALID = i18n._(t('login.msg.invalid')`The Steam ID must be a 9 digit number.`);
-const MESSAGE_NOT_FOUND = i18n._(t('login.msg.404')`Could not find your Steam profile.`);
-const MESSAGE_ERROR = i18n._(t('login.msg.500')`An error has occured while finding your account.`);
-const createWelcomeMessage = (name: string) => i18n._(t('login.msg.welcome')`Welcome ${name}`);
+const STEAM_ID_REGEX = new RegExp("^\\d{9}$");
+const VALIDATION_REQUIRED = i18n._(t("login.msg.required")`Please enter your Steam ID.`);
+const VALIDATION_INVALID = i18n._(t("login.msg.invalid")`The Steam ID must be a 9 digit number.`);
+const MESSAGE_NOT_FOUND = i18n._(t("login.msg.404")`Could not find your Steam profile.`);
+const MESSAGE_ERROR = i18n._(t("login.msg.500")`An error has occured while finding your account.`);
+const STEAM_ID_INPUT_LABEL = i18n._(t("login.steamIdLabel")`Steam ID`);
+const STEAM_ID_INPUT_PLACEHOLDER = i18n._(t("login.steamIdPlaceholder")`Your Steam32 ID`);
 
-export class Login extends React.Component<LoginProps, LoginState> {
-  constructor(props: LoginProps) {
+const createWelcomeMessage = (name: string) => i18n._(t("login.msg.welcome")`Welcome ${name}`);
+
+export class Login extends React.Component<{}, ILoginState> {
+  constructor(props: {}) {
     super(props);
 
     this.state = {
+      error: {},
       loading: false,
       submitted: false,
-      error: { }
     };
   }
 
-  private readonly _validate = (steamId?: string): boolean => {
+  public render() {
+    const {
+      error,
+      loading,
+    } = this.state;
+
+    return (
+      <React.Fragment>
+        <FormGroup
+          label={STEAM_ID_INPUT_LABEL}
+          labelFor="steamIdInput"
+          helperText={error.steamId}
+        >
+          <InputGroup
+            required
+            id="steamIdInput"
+            placeholder={STEAM_ID_INPUT_PLACEHOLDER}
+            intent={error.steamId ? "warning" : "none"}
+            onChange={this.handleIdChange}
+          />
+        </FormGroup>
+        <Button onClick={this.handleLoginClick} loading={loading}>Login</Button>
+      </React.Fragment>
+    );
+  }
+
+  private readonly validate = (steamId?: string): boolean => {
     if (!steamId) {
-      this.setState(produce(draft => {
+      this.setState(produce((draft) => {
         draft.error.steamId = VALIDATION_REQUIRED;
       }));
 
@@ -49,33 +75,32 @@ export class Login extends React.Component<LoginProps, LoginState> {
     }
 
     if (!STEAM_ID_REGEX.test(steamId)) {
-      this.setState(produce(draft => {
+      this.setState(produce((draft) => {
         draft.error.steamId = VALIDATION_INVALID;
       }));
 
       return false;
     }
 
-    this.setState(produce(draft => {
+    this.setState(produce((draft) => {
       draft.error = {};
     }));
 
     return true;
   }
 
-  private readonly _handleLoginClick = async () => {
+  private readonly handleLoginClick = async () => {
     const { steamId } = this.state;
 
-    this.setState(produce(draft => {
+    this.setState(produce((draft) => {
       draft.submitted = true;
     }));
 
-    if (!this._validate(steamId)) {
+    if (!this.validate(steamId)) {
       return;
     }
 
-
-    this.setState(produce(draft => {
+    this.setState(produce((draft) => {
       draft.loading = true;
     }));
 
@@ -83,7 +108,7 @@ export class Login extends React.Component<LoginProps, LoginState> {
       data,
       error,
       success,
-    } = await PlayerApi.getProfile(steamId || '');
+    } = await PlayerApi.getProfile(steamId || "");
 
     if (!success) {
       const message = error === ErrorReason.NOT_FOUND ?
@@ -91,61 +116,31 @@ export class Login extends React.Component<LoginProps, LoginState> {
         MESSAGE_ERROR;
 
       AppToaster.show({
-        message,
         intent: "danger",
+        message,
       });
     }
 
     if (data) {
       AppToaster.show({
-        message: createWelcomeMessage(data.profile.personaname),
         intent: "success",
+        message: createWelcomeMessage(data.profile.personaname),
       });
     }
 
-    this.setState(produce(draft => {
+    this.setState(produce((draft) => {
       draft.loading = false;
     }));
   }
 
-  private readonly _handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  private readonly handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     if (this.state.submitted) {
-      this._validate(value);
+      this.validate(value);
     }
 
-    this.setState(produce(draft => {
+    this.setState(produce((draft) => {
       draft.steamId = value;
     }));
-  }
-
-  render() {
-    const {
-      error,
-      loading,
-    } = this.state;
-
-    return (
-      <I18n>
-        {({ i18n }) => (
-          <React.Fragment>
-            <FormGroup
-              label={i18n._(t('login.steamIdLabel')`Steam ID`)}
-              labelFor="steamIdInput"
-              helperText={error.steamId}
-            >
-              <InputGroup
-                required
-                id="steamIdInput"
-                placeholder={i18n._(t('login.steamIdPlaceholder')`Your Steam32 ID`)}
-                intent={error.steamId ? 'warning' : 'none'}
-                onChange={this._handleIdChange}
-              />
-            </FormGroup>
-            <Button onClick={this._handleLoginClick} loading={loading}>Login</Button>
-          </React.Fragment>
-        )}
-      </I18n>
-    );
   }
 }

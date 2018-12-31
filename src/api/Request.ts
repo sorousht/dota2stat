@@ -15,13 +15,13 @@ export async function request<T>(url: string): Promise<IResponse<T>> {
   switch (response.status) {
     case 404:
       return {
-        success: false,
         error: ErrorReason.NOT_FOUND,
+        success: false,
       };
     default:
       return {
-        success: false,
         error: ErrorReason.UNKNOWN,
+        success: false,
       };
   }
 }

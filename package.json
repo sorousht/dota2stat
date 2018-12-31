@@ -30,7 +30,9 @@
     "eject": "react-scripts eject",
     "add-locale": "lingui add-locale",
     "extract": "lingui extract",
-    "compile": "lingui compile"
+    "compile": "lingui compile",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "dev": "npm-run-all tslint start"
   },
   "eslintConfig": {
     "extends": "react-app"

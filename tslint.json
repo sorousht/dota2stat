@@ -1,3 +1,12 @@
 {
-  "extends": ["tslint:latest", "tslint-blueprint"]
+  "extends": ["tslint:latest", "tslint-blueprint"],
+  "rules": {
+    "no-console": false,
+    "no-debugger": false
+  },
+  "linterOptions": {
+    "exclude": [
+      "src/config/i18n/**"
+    ]
+  }
 }

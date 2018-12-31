@@ -1,12 +1,12 @@
-export interface GetPlayerResponse {
-    tracked_until: string,
-    rank_tier: number,
-    solo_competitive_rank: string,
-    competitive_rank: string,
-    leaderboard_rank: number,
+export interface IGetPlayerResponse {
+    tracked_until: string;
+    rank_tier: number;
+    solo_competitive_rank: string;
+    competitive_rank: string;
+    leaderboard_rank: number;
     mmr_estimate: {
-      estimate: number
-    },
+      estimate: number;
+    };
     profile: {
       account_id: number,
       personaname: string,
@@ -20,5 +20,5 @@ export interface GetPlayerResponse {
       last_login: string,
       loccountrycode: string,
       is_contributor: boolean,
-    },
+    };
 }

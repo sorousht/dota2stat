@@ -1,23 +1,23 @@
-import { GetPlayerResponse } from "../../models/GetPlayerResponse";
-import { request } from "../Request";
-import { IResponse } from "../IResponse";
+import { IGetPlayerResponse } from "../../models/IGetPlayerResponse";
 import { ErrorReason } from "../ErrorReason";
+import { IResponse } from "../IResponse";
+import { request } from "../Request";
 
 export class PlayerApi {
-  static async getProfile(steamId: string): Promise<IResponse<GetPlayerResponse>> {
+  public static async getProfile(steamId: string): Promise<IResponse<IGetPlayerResponse>> {
     const url = `https://api.opendota.com/api/players/${steamId}`;
 
-    const response = await request<GetPlayerResponse>(url);
+    const response = await request<IGetPlayerResponse>(url);
 
-    if (response.data 
+    if (response.data
         && response.data.profile
         && response.data.profile.steamid) {
       return response;
     }
 
     return {
-      success: false,
       error: ErrorReason.NOT_FOUND,
+      success: false,
     };
   }
 }
