@@ -4,19 +4,30 @@ import { Button, FormGroup, InputGroup } from "@blueprintjs/core/";
 import { t } from "@lingui/macro";
 import { produce } from "immer";
 import React from "react";
+import { connect } from "react-redux";
+import { getPlayerAction } from "../../actions/player";
 import { ErrorReason } from "../../api/ErrorReason";
-import { PlayerApi } from "../../api/Player";
 import { AppToaster } from "../../components/AppToaster";
+import { IProfile } from "../../models/IProfile";
+import { EntityStatus, IStoreEntity } from "../../reducers/IStoreEntity";
+import { IState } from "../../reducers/state";
 import { i18n } from "../../services/i18n";
 
 interface ILoginState {
   steamId?: string;
-  loading: boolean;
   submitted: boolean;
   error: {
     steamId?: string,
   };
 }
+interface IStateProps {
+  profile: IStoreEntity<IProfile>;
+}
+interface IDispatchProps {
+  onGetPlayer: (steamId: string) => void;
+}
+
+interface IProps extends IStateProps, IDispatchProps { }
 
 const STEAM_ID_REGEX = new RegExp("^\\d{9}$");
 const VALIDATION_REQUIRED = i18n._(t("login.msg.required")`Please enter your Steam ID.`);
@@ -28,22 +39,45 @@ const STEAM_ID_INPUT_PLACEHOLDER = i18n._(t("login.steamIdPlaceholder")`Your Ste
 
 const createWelcomeMessage = (name: string) => i18n._(t("login.msg.welcome")`Welcome ${name}`);
 
-export class Login extends React.Component<{}, ILoginState> {
-  constructor(props: {}) {
+class Login extends React.Component<IProps, ILoginState> {
+  constructor(props: IProps) {
     super(props);
 
     this.state = {
       error: {},
-      loading: false,
       submitted: false,
     };
+  }
+
+  public componentDidUpdate(prevProps: IProps) {
+    if (prevProps.profile.status === this.props.profile.status) {
+      return;
+    }
+
+    const { error, status, value } = this.props.profile;
+    if (status === EntityStatus.FULFILLED && value) {
+      AppToaster.show({
+        intent: "success",
+        message: createWelcomeMessage(value.personaname),
+      });
+    } else if (status === EntityStatus.REJECTED) {
+      const message = error === ErrorReason.NOT_FOUND ?
+        MESSAGE_NOT_FOUND :
+        MESSAGE_ERROR;
+
+      AppToaster.show({
+        intent: "danger",
+        message,
+      });
+    }
   }
 
   public render() {
     const {
       error,
-      loading,
     } = this.state;
+
+    const loading = this.props.profile.status === EntityStatus.PENDING;
 
     return (
       <React.Fragment>
@@ -100,37 +134,9 @@ export class Login extends React.Component<{}, ILoginState> {
       return;
     }
 
-    this.setState(produce((draft) => {
-      draft.loading = true;
-    }));
-
-    const {
-      data,
-      error,
-      success,
-    } = await PlayerApi.getProfile(steamId || "");
-
-    if (!success) {
-      const message = error === ErrorReason.NOT_FOUND ?
-        MESSAGE_NOT_FOUND :
-        MESSAGE_ERROR;
-
-      AppToaster.show({
-        intent: "danger",
-        message,
-      });
+    if (steamId) {
+      this.props.onGetPlayer(steamId);
     }
-
-    if (data) {
-      AppToaster.show({
-        intent: "success",
-        message: createWelcomeMessage(data.profile.personaname),
-      });
-    }
-
-    this.setState(produce((draft) => {
-      draft.loading = false;
-    }));
   }
 
   private readonly handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,3 +150,14 @@ export class Login extends React.Component<{}, ILoginState> {
     }));
   }
 }
+
+export const ConnectedLogin = connect<IStateProps, IDispatchProps, {}, IState>(
+  (state: IState) => {
+    return {
+      profile: state.user,
+    };
+  },
+  {
+    onGetPlayer: getPlayerAction,
+  },
+)(Login);

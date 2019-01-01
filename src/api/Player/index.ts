@@ -10,8 +10,8 @@ export class PlayerApi {
     const response = await request<IGetPlayerResponse>(url);
 
     if (response.data
-        && response.data.profile
-        && response.data.profile.steamid) {
+      && response.data.profile
+      && response.data.profile.steamid) {
       return response;
     }
 
