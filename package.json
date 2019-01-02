@@ -13,6 +13,7 @@
     "classnames": "^2.2.6",
     "connected-react-router": "^6.1.0",
     "env-cmd": "^8.0.2",
+    "flexboxgrid": "^6.3.1",
     "history": "^4.7.2",
     "immer": "^1.9.3",
     "lodash": "^4.17.11",
