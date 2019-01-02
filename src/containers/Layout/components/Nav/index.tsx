@@ -1,5 +1,4 @@
 import { Alignment, Button, Navbar } from "@blueprintjs/core";
-import "flexboxgrid";
 import * as React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../../assets/images/dota-2_64.png";

@@ -1,0 +1,14 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.layout {
+  background-color: $pt-dark-app-background-color;
+  height: 100%;
+
+  nav {
+    margin-bottom: 24px;
+  }
+
+  footer {
+    margin-top: 32px;
+  }
+}
