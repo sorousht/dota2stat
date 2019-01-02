@@ -1,5 +1,5 @@
 // tslint:disable-next-line:no-submodule-imports
-import { Button, FormGroup, InputGroup } from "@blueprintjs/core/";
+import { Button, Card, Elevation, FormGroup, InputGroup, Text } from "@blueprintjs/core/";
 // tslint:disable-next-line:no-implicit-dependencies
 import { t } from "@lingui/macro";
 import { produce } from "immer";
@@ -12,6 +12,7 @@ import { IProfile } from "../../models/IProfile";
 import { EntityStatus, IStoreEntity } from "../../reducers/IStoreEntity";
 import { IState } from "../../reducers/state";
 import { i18n } from "../../services/i18n";
+import styles from "./style.module.scss";
 
 interface ILoginState {
   steamId?: string;
@@ -80,22 +81,35 @@ class Login extends React.Component<IProps, ILoginState> {
     const loading = this.props.profile.status === EntityStatus.PENDING;
 
     return (
-      <React.Fragment>
-        <FormGroup
-          label={STEAM_ID_INPUT_LABEL}
-          labelFor="steamIdInput"
-          helperText={error.steamId}
-        >
-          <InputGroup
-            required
-            id="steamIdInput"
-            placeholder={STEAM_ID_INPUT_PLACEHOLDER}
-            intent={error.steamId ? "warning" : "none"}
-            onChange={this.handleIdChange}
-          />
-        </FormGroup>
-        <Button onClick={this.handleLoginClick} loading={loading}>Login</Button>
-      </React.Fragment>
+      <div className={styles.container}>
+        <Card interactive={false} elevation={Elevation.TWO} className={styles.card}>
+          <h2>
+            The Gate
+          </h2>
+          <React.Fragment>
+            <FormGroup
+              label={STEAM_ID_INPUT_LABEL}
+              labelFor="steamIdInput"
+              helperText={error.steamId}
+            >
+              <InputGroup
+                required
+                id="steamIdInput"
+                placeholder={STEAM_ID_INPUT_PLACEHOLDER}
+                intent={error.steamId ? "warning" : "none"}
+                onChange={this.handleIdChange}
+              />
+            </FormGroup>
+            <Button
+              intent="primary"
+              icon="log-in"
+              onClick={this.handleLoginClick}
+              loading={loading}>
+              Step In
+            </Button>
+          </React.Fragment>
+        </Card>
+      </div>
     );
   }
 
