@@ -34,7 +34,8 @@
     "serve": "serve -s build",
     "build:dev": "env-cmd .env.dev npm-run-all build serve",
     "build:prod": "env-cmd .env.prod npm-run-all build",
-    "test": "react-scripts test",
+    "publish": "surge --project ./build/ --domain dota2stat.surge.sh",
+    "test": "CI=true react-scripts test",
     "eject": "react-scripts eject",
     "add-locale": "lingui add-locale",
     "extract": "lingui extract",
@@ -63,6 +64,7 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/redux-actions": "^2.3.1",
     "babel-core": "^7.0.0-bridge.0",
+    "git-scripts": "^0.2.1",
     "jest": "^23.6.0",
     "npm-run-all": "^4.1.5",
     "redux-devtools": "^3.5.0",
@@ -70,5 +72,10 @@
     "tslint": "^5.12.0",
     "tslint-blueprint": "^0.1.0",
     "tslint-config-prettier": "^1.17.0"
+  },
+  "git": {
+    "scripts": {
+      "pre-commit": "yarn test"
+    }
   }
 }
