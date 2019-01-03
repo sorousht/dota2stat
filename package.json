@@ -34,7 +34,7 @@
     "serve": "serve -s build",
     "build:dev": "env-cmd .env.dev npm-run-all build serve",
     "build:prod": "env-cmd .env.prod npm-run-all build",
-    "publish": "surge --project ./build/ --domain dota2stat.surge.sh",
+    "publish": "cp ./build/index.html ./build/200.html && surge --project ./build/ --domain https://dota2stat.surge.sh",
     "test": "CI=true react-scripts test",
     "eject": "react-scripts eject",
     "add-locale": "lingui add-locale",
