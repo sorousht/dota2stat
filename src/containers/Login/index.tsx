@@ -2,7 +2,9 @@
 import { Button, Card, Elevation, FormGroup, InputGroup, Text } from "@blueprintjs/core/";
 // tslint:disable-next-line:no-implicit-dependencies
 import { t } from "@lingui/macro";
+import { addDays } from "date-fns";
 import { produce } from "immer";
+import { set as setCookie } from "js-cookie";
 import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
@@ -60,6 +62,12 @@ class Login extends React.Component<IProps, ILoginState> {
 
     const { error, status, value } = this.props.profile;
     if (status === EntityStatus.FULFILLED && value) {
+
+      const expires = addDays(Date.now(), 30);
+      setCookie("user", value.steamid.toString(), {
+        expires,
+      });
+
       AppToaster.show({
         intent: "success",
         message: createWelcomeMessage(value.personaname),

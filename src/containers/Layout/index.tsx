@@ -1,16 +1,20 @@
 import { Text } from "@blueprintjs/core";
 import classnames from "classnames";
+import { remove as removeCookie } from "js-cookie";
 import * as React from "react";
-import { IProfile } from "../../models/IProfile";
-import { IStoreEntity } from "../../reducers/IStoreEntity";
-import { history } from "../../store";
+import { withRouter } from "react-router";
 import "./bootstrap.css";
 import { Nav } from "./components/Nav";
 import styles from "./style.module.scss";
 
-export const Layout: React.SFC<{}> = (props) => {
-  const handleProfileClick = () => {
-    history.push("/profile");
+export const Layout = withRouter(({ history, children }) => {
+  const handleLogin = () => {
+    history.push("/login");
+  };
+
+  const handleLogout = () => {
+    removeCookie("user");
+    history.push("/login");
   };
 
   return (
@@ -20,13 +24,14 @@ export const Layout: React.SFC<{}> = (props) => {
           <div className="col-sm-12">
             <nav className="row">
               <Nav
-                onProfileClick={handleProfileClick}
+                onLogin={handleLogin}
+                onLogout={handleLogout}
               />
             </nav>
             <div className="container">
               <div className="row">
                 <div className="col-sm-12">
-                  {props.children}
+                  {children}
                 </div>
               </div>
             </div>
@@ -42,4 +47,4 @@ export const Layout: React.SFC<{}> = (props) => {
       </div>
     </div>
   );
-};
+});
