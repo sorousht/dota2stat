@@ -1,6 +1,5 @@
 import { Text } from "@blueprintjs/core";
 import classnames from "classnames";
-import { remove as removeCookie } from "js-cookie";
 import * as React from "react";
 import { withRouter } from "react-router";
 import "./bootstrap.css";
@@ -13,8 +12,7 @@ export const Layout = withRouter(({ history, children }) => {
   };
 
   const handleLogout = () => {
-    removeCookie("user");
-    history.push("/login");
+    history.push("/logout");
   };
 
   return (

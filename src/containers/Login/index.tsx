@@ -8,7 +8,7 @@ import { set as setCookie } from "js-cookie";
 import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
-import { getPlayerAction } from "../../actions/player";
+import { getPlayerAction, setPlayerId } from "../../actions/player";
 import { ErrorReason } from "../../api/ErrorReason";
 import { AppToaster } from "../../components/AppToaster";
 import { IProfile } from "../../models/IProfile";
@@ -26,9 +26,11 @@ interface ILoginState {
 }
 interface IStateProps {
   profile: IStoreEntity<IProfile>;
+  userId?: string;
 }
 interface IDispatchProps {
   onGetPlayer: (steamId: string) => void;
+  onSetUserId: (userId: string) => void;
 }
 
 interface IProps extends IStateProps, IDispatchProps, RouteComponentProps { }
@@ -64,9 +66,10 @@ class Login extends React.Component<IProps, ILoginState> {
     if (status === EntityStatus.FULFILLED && value) {
 
       const expires = addDays(Date.now(), 30);
-      setCookie("user", value.steamid.toString(), {
+      setCookie("user", value.account_id.toString(), {
         expires,
       });
+      this.props.onSetUserId(value.account_id.toString());
 
       AppToaster.show({
         intent: "success",
@@ -90,6 +93,8 @@ class Login extends React.Component<IProps, ILoginState> {
       error,
     } = this.state;
 
+    const { userId } = this.props;
+
     const loading = this.props.profile.status === EntityStatus.PENDING;
 
     return (
@@ -107,7 +112,7 @@ class Login extends React.Component<IProps, ILoginState> {
               <InputGroup
                 required
                 id="steamIdInput"
-                placeholder={STEAM_ID_INPUT_PLACEHOLDER}
+                placeholder={userId || STEAM_ID_INPUT_PLACEHOLDER}
                 intent={error.steamId ? "warning" : "none"}
                 onChange={this.handleIdChange}
               />
@@ -181,9 +186,11 @@ export const ConnectedLogin = connect<IStateProps, IDispatchProps, {}, IState>(
   (state: IState) => {
     return {
       profile: state.user,
+      userId: state.userId,
     };
   },
   {
     onGetPlayer: getPlayerAction,
+    onSetUserId: setPlayerId,
   },
 )(Login);

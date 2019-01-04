@@ -37,9 +37,8 @@ const reducer = handleActions<IStoreEntity<IProfile>, IResponse<IGetPlayerRespon
 
       return StoreEntity.rejected(error);
     },
-    [pending(PlayerActions.GET)]: (state, action) => {
-      return StoreEntity.pending();
-    },
+    [pending(PlayerActions.GET)]: () => StoreEntity.pending(),
+    [PlayerActions.CLEAR]: () => StoreEntity.empty(),
   },
   StoreEntity.empty(),
 );

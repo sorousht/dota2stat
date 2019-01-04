@@ -58,7 +58,8 @@ const nav: React.SFC<IProps> = (props) => {
 export const Nav = connect<IStateProps, {}, {}, IState>(
   (state: IState) => {
     return {
-      isAuth: state.user
+      isAuth: !!state.userId
+        && !!state.user
         && state.user.status === EntityStatus.FULFILLED
         && !!state.user.value
         && !!state.user.value.steamid,

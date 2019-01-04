@@ -1,6 +1,7 @@
 import { Callout, Card, Elevation, Position, Spinner, Tag, Tooltip } from "@blueprintjs/core";
 import React from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router";
 import { getPlayerAction } from "../../actions/player";
 import { IProfile } from "../../models/IProfile";
 import { EntityStatus, IStoreEntity } from "../../reducers/IStoreEntity";
@@ -9,6 +10,7 @@ import styles from "./style.module.scss";
 
 interface IStateProps {
   profile: IStoreEntity<IProfile>;
+  userId?: string;
 }
 interface IDispatchProps {
   onGetPlayer: (steamId: string) => void;
@@ -20,8 +22,12 @@ const Profile: React.SFC<IProps> = (props: IProps) => {
 
   const { value, error, status } = props.profile;
 
-  if (status === EntityStatus.NONE) {
-    props.onGetPlayer("102511417");
+  if (!props.userId) {
+    return (<Redirect to="/login" />);
+  }
+
+  if (status === EntityStatus.NONE && !value) {
+    props.onGetPlayer(props.userId);
   }
 
   if (status === EntityStatus.PENDING || status === EntityStatus.NONE) {
@@ -63,6 +69,7 @@ export const ConnectedProfile = connect<IStateProps, IDispatchProps, {}, IState>
   (state: IState) => {
     return {
       profile: state.user,
+      userId: state.userId,
     };
   },
   {

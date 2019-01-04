@@ -6,6 +6,7 @@ import { i18n, language } from "../../services/i18n";
 import { history } from "../../store";
 import { Layout } from "../Layout";
 import { ConnectedLogin } from "../Login";
+import { Logout } from "../Logout";
 import { NotFound } from "../NotFound/NotFound";
 import { ConnectedProfile } from "../Profile";
 
@@ -17,6 +18,7 @@ const App = () => {
           <Switch>
             <Route exact path="/login" component={ConnectedLogin} />
             <Route exact path="/profile" component={ConnectedProfile} />
+            <Route exact path="/logout" component={Logout} />
             <Redirect exact from="/" to="/login" />
             <Route component={NotFound} />
           </Switch>
