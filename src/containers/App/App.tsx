@@ -1,7 +1,9 @@
 import { I18nProvider } from "@lingui/react";
+import { ConnectedRouter } from "connected-react-router";
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { i18n, language } from "../../services/i18n";
+import { history } from "../../store";
 import { Layout } from "../Layout";
 import { ConnectedLogin } from "../Login";
 import { NotFound } from "../NotFound/NotFound";
@@ -11,13 +13,14 @@ const App = () => {
   return (
     <I18nProvider i18n={i18n} language={language}>
       <Layout>
-        <Router>
+        <ConnectedRouter history={history}>
           <Switch>
-            <Route exact path="/" component={ConnectedLogin} />
+            <Route exact path="/login" component={ConnectedLogin} />
             <Route exact path="/profile" component={ConnectedProfile} />
+            <Redirect exact from="/" to="/login" />
             <Route component={NotFound} />
           </Switch>
-        </Router>
+        </ConnectedRouter>
       </Layout>
     </I18nProvider>
   );
