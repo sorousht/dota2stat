@@ -14,6 +14,15 @@ export enum EntityStatus {
   NONE = "none",
 }
 
+export interface IUnpackedStoreEntity<T> {
+  pending: boolean;
+  virgin: boolean;
+  hasError: boolean;
+  hasValue: boolean;
+  value?: T;
+  error?: string;
+}
+
 export class StoreEntity {
   public static fulfilled<T>(value: T): IStoreEntity<T> {
     return {
@@ -44,6 +53,23 @@ export class StoreEntity {
       error: undefined,
       status: EntityStatus.NONE,
       value: undefined,
+    };
+  }
+
+  public static unpack<T>(entity: IStoreEntity<T>): IUnpackedStoreEntity<T> {
+    const { error, status, value } = entity;
+    const pending = status === EntityStatus.PENDING;
+    const virgin = status === EntityStatus.NONE && !value;
+    const hasError = status === EntityStatus.REJECTED;
+    const hasValue = status === EntityStatus.FULFILLED && !!entity.value;
+
+    return {
+      error,
+      hasError,
+      hasValue,
+      pending,
+      value,
+      virgin,
     };
   }
 }
