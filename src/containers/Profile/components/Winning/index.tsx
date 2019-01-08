@@ -4,13 +4,15 @@ import { Divider, H2, Text } from "@blueprintjs/core";
 import { SKELETON } from "@blueprintjs/core/lib/esm/common/classes";
 import classNames from "classnames";
 import React from "react";
+import { IPlayer } from "../../../../models/IPlayer";
 import { IWinLoss } from "../../../../models/IWinLoss";
-import { EntityStatus, IStoreEntity, StoreEntity } from "../../../../reducers/IStoreEntity";
+import { IStoreEntity, StoreEntity } from "../../../../reducers/IStoreEntity";
 import styles from "./style.module.scss";
 interface IProps {
   winLoss: IStoreEntity<IWinLoss>;
   onGetWinLoss: (steamId: string) => void;
   steamId: string;
+  player: IStoreEntity<IPlayer>;
 }
 
 const getWinningRate = (winLoss: IWinLoss): number => {
@@ -28,46 +30,48 @@ const getWinrateColor = (rate: number): string => {
   return styles.good;
 };
 
-export const WinLoss: React.SFC<IProps> = ({ winLoss, onGetWinLoss, steamId }) => {
-  const { value, virgin, pending } = StoreEntity.unpack(winLoss);
+export const WinLoss: React.SFC<IProps> = ({ winLoss, onGetWinLoss, steamId, player }) => {
+  const unpackedWinLoss = StoreEntity.unpack(winLoss);
+  const unPackedPlayer = StoreEntity.unpack(player);
 
-  if (virgin) {
+  if (unpackedWinLoss.virgin) {
     onGetWinLoss(steamId);
   }
 
-  const rate = value ? getWinningRate(value) : 0;
-  const skeleton = pending ? SKELETON : "";
+  const rate = unpackedWinLoss.value ? getWinningRate(unpackedWinLoss.value) : 0;
+  const winLossSkeleton = unpackedWinLoss.pending ? SKELETON : "";
+  const playerSkeleton = unPackedPlayer.pending ? SKELETON : "";
 
   return (
     <div className={classNames(styles.stats)}>
-      <div className={classNames(styles.block, skeleton)}>
+      <div className={classNames(styles.block, winLossSkeleton)}>
         <Text className="bp3-text-muted">
           Matches
         </Text>
         <H2>
-          {value ? value.lose + value.win : 0}
+          {unpackedWinLoss.value ? unpackedWinLoss.value.lose + unpackedWinLoss.value.win : 0}
         </H2>
       </div>
       <Divider />
-      <div className={classNames(styles.block, skeleton)}>
+      <div className={classNames(styles.block, winLossSkeleton)}>
         <Text className="bp3-text-muted">
           WINS
         </Text>
         <H2>
-          {value ? value.win : 0}
+          {unpackedWinLoss.value ? unpackedWinLoss.value.win : 0}
         </H2>
       </div>
       <Divider />
-      <div className={classNames(styles.block, skeleton)}>
+      <div className={classNames(styles.block, winLossSkeleton)}>
         <Text className="bp3-text-muted">
           LOSES
         </Text>
         <H2>
-          {value ? value.lose : 0}
+          {unpackedWinLoss.value ? unpackedWinLoss.value.lose : 0}
         </H2>
       </div>
       <Divider />
-      <div className={classNames(styles.block, skeleton)}>
+      <div className={classNames(styles.block, winLossSkeleton)}>
         <Text className="bp3-text-muted">
           WINRATE
         </Text>
@@ -76,12 +80,12 @@ export const WinLoss: React.SFC<IProps> = ({ winLoss, onGetWinLoss, steamId }) =
         </H2>
       </div>
       <Divider />
-      <div className={classNames(styles.block, skeleton)}>
+      <div className={classNames(styles.block, unPackedPlayer)}>
         <Text className="bp3-text-muted">
           MMR
         </Text>
         <H2>
-          <span className={styles.mmr}>?</span>
+          <span className={styles.mmr}>{unPackedPlayer.value ? unPackedPlayer.value.mmr_estimate.estimate : 0}</span>
         </H2>
       </div>
     </div>

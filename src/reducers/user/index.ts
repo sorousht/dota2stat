@@ -6,14 +6,13 @@ import {
 } from "../../actions";
 import { PlayerActions } from "../../actions/player";
 import { IResponse } from "../../api/IResponse";
-import { IGetPlayerResponse } from "../../models/IGetPlayerResponse";
-import { IProfile } from "../../models/IProfile";
+import { IPlayer } from "../../models/IPlayer";
 import {
   IStoreEntity,
   StoreEntity,
 } from "../IStoreEntity";
 
-const reducer = handleActions<IStoreEntity<IProfile>, IResponse<IGetPlayerResponse>>(
+const reducer = handleActions<IStoreEntity<IPlayer>, IResponse<IPlayer>>(
   {
     [fulfilled(PlayerActions.GET)]: (state, action) => {
       if (!action.payload) {
@@ -23,7 +22,7 @@ const reducer = handleActions<IStoreEntity<IProfile>, IResponse<IGetPlayerRespon
       const { success, error, data } = action.payload;
 
       if (success && !!data) {
-        return StoreEntity.fulfilled(data.profile);
+        return StoreEntity.fulfilled(data);
       }
 
       return StoreEntity.rejected(error);

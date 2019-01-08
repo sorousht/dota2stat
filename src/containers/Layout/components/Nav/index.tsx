@@ -3,12 +3,12 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import logo from "../../../../assets/images/dota-2_64.png";
-import { IProfile } from "../../../../models/IProfile";
+import { IPlayer } from "../../../../models/IPlayer";
 import { EntityStatus, IStoreEntity } from "../../../../reducers/IStoreEntity";
 import { IState } from "../../../../reducers/state";
 
 interface IStateProps {
-  profile: IStoreEntity<IProfile>;
+  profile: IStoreEntity<IPlayer>;
   isAuth: boolean;
 }
 
@@ -62,7 +62,7 @@ export const Nav = connect<IStateProps, {}, {}, IState>(
         && !!state.user
         && state.user.status === EntityStatus.FULFILLED
         && !!state.user.value
-        && !!state.user.value.steamid,
+        && !!state.user.value.profile.steamid,
       profile: state.user,
     };
   },

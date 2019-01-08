@@ -11,7 +11,7 @@ import { RouteComponentProps } from "react-router";
 import { getPlayerAction, setPlayerId } from "../../actions/player";
 import { ErrorReason } from "../../api/ErrorReason";
 import { AppToaster } from "../../components/AppToaster";
-import { IProfile } from "../../models/IProfile";
+import { IPlayer } from "../../models/IPlayer";
 import { EntityStatus, IStoreEntity } from "../../reducers/IStoreEntity";
 import { IState } from "../../reducers/state";
 import { i18n } from "../../services/i18n";
@@ -25,7 +25,7 @@ interface ILoginState {
   };
 }
 interface IStateProps {
-  profile: IStoreEntity<IProfile>;
+  profile: IStoreEntity<IPlayer>;
   userId?: string;
 }
 interface IDispatchProps {
@@ -66,14 +66,14 @@ class Login extends React.Component<IProps, ILoginState> {
     if (status === EntityStatus.FULFILLED && value) {
 
       const expires = addDays(Date.now(), 30);
-      setCookie("user", value.account_id.toString(), {
+      setCookie("user", value.profile.account_id.toString(), {
         expires,
       });
-      this.props.onSetUserId(value.account_id.toString());
+      this.props.onSetUserId(value.profile.account_id.toString());
 
       AppToaster.show({
         intent: "success",
-        message: createWelcomeMessage(value.personaname),
+        message: createWelcomeMessage(value.profile.personaname),
       });
       this.props.history.push("/profile");
     } else if (status === EntityStatus.REJECTED) {

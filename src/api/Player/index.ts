@@ -1,4 +1,4 @@
-import { IGetPlayerResponse } from "../../models/IGetPlayerResponse";
+import { IPlayer } from "../../models/IPlayer";
 import { IWinLoss } from "../../models/IWinLoss";
 import { ErrorReason } from "../ErrorReason";
 import { IResponse } from "../IResponse";
@@ -8,10 +8,10 @@ const OPEN_DOTA_API_URL = "https://api.opendota.com/api";
 const createApiUrl = (action: string): string => `${OPEN_DOTA_API_URL}/${action}`;
 
 export class PlayerApi {
-  public static async getProfile(steamId: string): Promise<IResponse<IGetPlayerResponse>> {
+  public static async getProfile(steamId: string): Promise<IResponse<IPlayer>> {
     const url = `https://api.opendota.com/api/players/${steamId}`;
 
-    const response = await request<IGetPlayerResponse>(url);
+    const response = await request<IPlayer>(url);
 
     if (response.data
       && response.data.profile

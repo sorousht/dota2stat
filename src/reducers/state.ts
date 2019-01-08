@@ -1,12 +1,12 @@
 import { RouterState } from "connected-react-router";
 import { get as getCookie } from "js-cookie";
-import { IProfile } from "../models/IProfile";
+import { IPlayer } from "../models/IPlayer";
 import { IWinLoss } from "../models/IWinLoss";
 import { IStoreEntity, StoreEntity } from "./IStoreEntity";
 
 export interface IState {
   readonly userId?: string;
-  readonly user: IStoreEntity<IProfile>;
+  readonly user: IStoreEntity<IPlayer>;
   readonly winLoss: IStoreEntity<IWinLoss>;
   router: RouterState;
 }

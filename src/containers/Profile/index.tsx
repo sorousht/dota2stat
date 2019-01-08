@@ -3,7 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router";
 import { getPlayerAction, getWinLoss } from "../../actions/player";
-import { IProfile } from "../../models/IProfile";
+import { IPlayer } from "../../models/IPlayer";
 import { IWinLoss } from "../../models/IWinLoss";
 import { EntityStatus, IStoreEntity } from "../../reducers/IStoreEntity";
 import { IState } from "../../reducers/state";
@@ -11,7 +11,7 @@ import { WinLoss } from "./components/Winning";
 import styles from "./style.module.scss";
 
 interface IStateProps {
-  profile: IStoreEntity<IProfile>;
+  profile: IStoreEntity<IPlayer>;
   winLoss: IStoreEntity<IWinLoss>;
   userId?: string;
 }
@@ -49,23 +49,28 @@ const Profile: React.SFC<IProps> = (props: IProps) => {
       </Callout>
     );
   }
-
+  const { profile, mmr_estimate } = value;
   return (
     <Card elevation={Elevation.TWO}>
       <div className={styles.persona}>
-        <H2 className="bp3-heading">{value.personaname}</H2>
+        <H2 className="bp3-heading">{profile.personaname}</H2>
         <Tooltip content="Navigate to Steam profile" position={Position.RIGHT}>
           <Tag
             minimal={true}
             icon="link"
             className={styles.steamProfile}
             interactive={true}
-            onClick={() => window.location.assign(value.profileurl)}
+            onClick={() => window.location.assign(profile.profileurl)}
           />
         </Tooltip>
       </div>
-      <img src={value.avatarfull} alt={value.personaname} />
-      <WinLoss winLoss={props.winLoss} onGetWinLoss={props.onGetWinLoss} steamId={props.userId} />
+      <img src={profile.avatarfull} alt={profile.personaname} />
+      <WinLoss
+        winLoss={props.winLoss}
+        onGetWinLoss={props.onGetWinLoss}
+        steamId={props.userId}
+        player={props.profile}
+      />
     </Card>
   );
 };
