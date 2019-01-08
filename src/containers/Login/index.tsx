@@ -35,9 +35,9 @@ interface IDispatchProps {
 
 interface IProps extends IStateProps, IDispatchProps, RouteComponentProps { }
 
-const STEAM_ID_REGEX = new RegExp("^\\d{9}$");
+const STEAM_ID_REGEX = new RegExp("^\\d+$");
 const VALIDATION_REQUIRED = i18n._(t("login.msg.required")`Please enter your Steam ID.`);
-const VALIDATION_INVALID = i18n._(t("login.msg.invalid")`The Steam ID must be a 9 digit number.`);
+const VALIDATION_INVALID = i18n._(t("login.msg.invalid")`The Steam ID must be digits.`);
 const MESSAGE_NOT_FOUND = i18n._(t("login.msg.404")`Could not find your Steam profile.`);
 const MESSAGE_ERROR = i18n._(t("login.msg.500")`An error has occured while finding your account.`);
 const STEAM_ID_INPUT_LABEL = i18n._(t("login.steamIdLabel")`Steam ID`);
