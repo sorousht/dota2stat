@@ -49,9 +49,9 @@ const Profile: React.SFC<IProps> = (props: IProps) => {
       </Callout>
     );
   }
-  const { profile, mmr_estimate } = value;
+  const { profile } = value;
   return (
-    <Card elevation={Elevation.TWO}>
+    <>
       <div className={styles.persona}>
         <H2 className="bp3-heading">{profile.personaname}</H2>
         <Tooltip content="Navigate to Steam profile" position={Position.RIGHT}>
@@ -64,14 +64,14 @@ const Profile: React.SFC<IProps> = (props: IProps) => {
           />
         </Tooltip>
       </div>
-      <img src={profile.avatarfull} alt={profile.personaname} />
+      <img src={profile.avatarfull} alt={profile.personaname} width={96} style={{ marginBottom: 16 }} />
       <WinLoss
         winLoss={props.winLoss}
         onGetWinLoss={props.onGetWinLoss}
         steamId={props.userId}
         player={props.profile}
       />
-    </Card>
+    </>
   );
 };
 
