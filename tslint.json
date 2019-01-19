@@ -2,7 +2,8 @@
   "extends": ["tslint:latest", "tslint-blueprint"],
   "rules": {
     "no-console": false,
-    "no-debugger": false
+    "no-debugger": false,
+    "no-submodule-imports": false,
   },
   "linterOptions": {
     "exclude": [
