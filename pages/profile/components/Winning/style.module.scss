@@ -1,0 +1,23 @@
+@import "~@blueprintjs/core/lib/scss/variables";
+
+.winloss-stats {
+  display: flex;
+  justify-content: space-between;
+  .block {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+}
+
+.low {
+  color: $vermilion3;
+}
+
+.good {
+  color: $forest3;
+}
+
+.mmr {
+  color: $gold5;
+}
