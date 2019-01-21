@@ -13,7 +13,7 @@ import Router from "next/router";
 import { AppToaster } from "../../components/AppToaster";
 
 interface IStateProps {
-  profile: IStoreEntity<IPlayer>;
+  player: IStoreEntity<IPlayer>;
   winLoss: IStoreEntity<IWinLoss>;
   userId?: string;
 }
@@ -36,13 +36,13 @@ class Profile extends React.Component<IProps> {
         message: "You need to login first!",
         icon: 'error',
       });
-      
+
       Router.push('/login');
 
       return
     }
 
-    const { value, status } = this.props.profile;
+    const { value, status } = this.props.player;
 
     if (status === EntityStatus.NONE && !value) {
       this.props.onGetPlayer(this.props.userId);
@@ -50,56 +50,55 @@ class Profile extends React.Component<IProps> {
   }
 
   public render() {
-    const { value, error, status } = this.props.profile;
+    const { value, error, status } = this.props.player;
 
-    if (status === EntityStatus.PENDING || status === EntityStatus.NONE) {
-      return (
-        <MainLayout>
-          <Spinner intent="primary" size={50} />
-        </MainLayout>
-      );
-    }
-
-    if ((status === EntityStatus.REJECTED && error) || !value) {
-      return (
-        <MainLayout>
-          <Callout intent="danger" icon="error">
-            Disruptor has broken the connection to the outer world, ask Zeus for help!
-      </Callout>
-        </MainLayout>
-      );
-    }
-    const { profile } = value;
     return (
       <MainLayout>
-        <div className="profile-container">
-          <H2 className="bp3-heading">{profile.personaname}</H2>
-          <Tooltip content="Navigate to Steam profile" position={Position.RIGHT}>
-            <Tag
-              minimal={true}
-              icon="link"
-              className="steam-link"
-              interactive={true}
-              onClick={() => window.location.assign(profile.profileurl)}
-            />
-          </Tooltip>
-        </div>
-        <img src={profile.avatarfull} alt={profile.personaname} width={96} style={{ marginBottom: 16 }} />
-        <WinLoss
-          winLoss={this.props.winLoss}
-          onGetWinLoss={this.props.onGetWinLoss}
-          steamId={this.props.userId}
-          player={this.props.profile}
-        />
+        {
+          status === EntityStatus.PENDING || status === EntityStatus.NONE ? this.loadingView :
+            (status === EntityStatus.REJECTED && error) || !value ? this.connectionErrorView :
+              value &&
+              (<>
+                <div className="profile-container">
+                  <H2 className="bp3-heading">{value.profile.personaname}</H2>
+                  <Tooltip content="Navigate to Steam profile" position={Position.RIGHT}>
+                    <Tag
+                      minimal={true}
+                      icon="link"
+                      className="steam-link"
+                      interactive={true}
+                      onClick={() => window.location.assign(value.profile.profileurl)}
+                    />
+                  </Tooltip>
+                </div>
+                <img src={value.profile.avatarfull} alt={value.profile.personaname} width={96} style={{ marginBottom: 16 }} />
+                <WinLoss
+                  winLoss={this.props.winLoss}
+                  onGetWinLoss={this.props.onGetWinLoss}
+                  steamId={this.props.userId}
+                  player={this.props.player}
+                />
+              </>)
+        }
       </MainLayout>
     );
   }
+
+  private loadingView: JSX.Element = (
+    <Spinner intent="primary" size={50} />
+  );
+
+  private connectionErrorView: JSX.Element = (
+    <Callout intent="danger" icon="error">
+      Disruptor has broken the connection to the outer world, ask Zeus for help!
+      </Callout>
+  );
 };
 
 const ConnectedProfile = connect<IStateProps, IDispatchProps, {}, IState>(
   (state: IState) => {
     return {
-      profile: state.user,
+      player: state.user,
       userId: state.userId,
       winLoss: state.winLoss,
     };
