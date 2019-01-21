@@ -6,6 +6,7 @@ import { Nav } from "./components/Nav";
 import "./style.module.scss";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import Router from "next/router";
+import { remove as removeCookie } from "js-cookie";
 
 export const MainLayout = ({ children }) => {
   const handleLogin = () => {
@@ -13,7 +14,8 @@ export const MainLayout = ({ children }) => {
   };
 
   const handleLogout = () => {
-    Router.push("/logout");
+    removeCookie("user");
+    window.location.href = "/login";
   };
 
   return (
