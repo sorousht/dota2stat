@@ -7,10 +7,10 @@ import promiseMiddleware from "redux-promise-middleware";
 // tslint:disable-next-line:no-implicit-dependencies
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createRootReducer } from "../reducers";
-import { IState } from "../reducers/state";
+import { IState, initialState } from "../reducers/state";
 import { logger } from "./middlewares/Logger";
 
-export function configureStore(initial?: IState) {
+export function configureStore() {
   const middlewares = [
     promiseMiddleware(),
     logger,
@@ -20,7 +20,7 @@ export function configureStore(initial?: IState) {
   // create store
   return createStore(
     createRootReducer(),
-    initial,
+    initialState,
     enhancer,
   );
 }

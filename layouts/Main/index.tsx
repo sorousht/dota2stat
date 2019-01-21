@@ -1,6 +1,4 @@
 import { Text } from "@blueprintjs/core";
-import classnames from "classnames";
-// tslint:disable-next-line:no-submodule-imports
 import Head from "next/head";
 import * as React from "react";
 import "./bootstrap.css";

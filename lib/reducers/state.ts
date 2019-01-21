@@ -1,4 +1,3 @@
-import { RouterState } from "connected-react-router";
 import { get as getCookie } from "js-cookie";
 import { IPlayer } from "../models/IPlayer";
 import { IWinLoss } from "../models/IWinLoss";

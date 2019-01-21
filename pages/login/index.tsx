@@ -1,4 +1,3 @@
-// tslint:disable-next-line:no-submodule-imports
 import { Button, Card, Elevation, FormGroup, InputGroup } from "@blueprintjs/core/";
 import { addDays } from "date-fns";
 import { produce } from "immer";
