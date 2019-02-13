@@ -1,4 +1,5 @@
 <img src="https://github.com/sorousht/dota2stat/raw/master/src/assets/images/dota-2_128.png" alt="Dota2Stat" width="64"/>
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
 
 > Dota2Stat gives you the true wisdom by consuming the legendary warriors' soul :star2:
 
@@ -54,3 +55,15 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/all-contributors/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars2.githubusercontent.com/u/3072018?v=4" width="100px;" alt="Soroush Torkzadeh"/><br /><sub><b>Soroush Torkzadeh</b></sub>](http://sorousht.com)<br />[🚇](#infra-sorousht "Infrastructure (Hosting, Build-Tools, etc)") [⚠️](https://github.com/sorousht/dota2stat/commits?author=sorousht "Tests") [💻](https://github.com/sorousht/dota2stat/commits?author=sorousht "Code") |
+| :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

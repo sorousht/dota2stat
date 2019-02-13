@@ -1,0 +1,25 @@
+{
+  "projectName": "dota2stat",
+  "projectOwner": "sorousht",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "sorousht",
+      "name": "Soroush Torkzadeh",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/3072018?v=4",
+      "profile": "http://sorousht.com",
+      "contributions": [
+        "infra",
+        "test",
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
